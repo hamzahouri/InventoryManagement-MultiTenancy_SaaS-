@@ -1,13 +1,13 @@
 package com.wincore.saasgestiondestock.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Produit")
@@ -32,6 +32,13 @@ public class Product extends AbstractEntity{
 
     @Column(name = "prix", nullable = false)
     private String price;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(mappedBy = "product")
+    private List<StockMvt> stockMvt;
 
 
 }
