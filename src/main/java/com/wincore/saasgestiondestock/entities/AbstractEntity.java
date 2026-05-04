@@ -1,27 +1,25 @@
 package com.wincore.saasgestiondestock.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-@Entity
 @MappedSuperclass
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @EntityListeners(AuditingEntityListener.class)
 public class AbstractEntity {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
@@ -34,7 +32,7 @@ public class AbstractEntity {
     private LocalDateTime updatedAt;
 
     @Column(name = "created_By", nullable = false, updatable = false)
-    private LocalDateTime createdBy;
+    private String createdBy;
 
     @Column(name = "updated_By", insertable = false)
     private LocalDateTime updatedBy;
@@ -44,8 +42,12 @@ public class AbstractEntity {
 
     @PrePersist
     protected void onCreate () {
-        if(this.isDeleted = null) {
+        if(this.isDeleted == null) {
             this.isDeleted = Boolean.FALSE;
+        }
+  // toDo : to be deleted after security implemented
+        if(this.createdBy == null) {
+            this.createdBy = "SYSTEM";
         }
     }
 }
